@@ -37,9 +37,19 @@
     <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="vendor/dropzone/dist/min/dropzone.min.js"></script>
     <script>
+        var hash;
         Dropzone.autoDiscover = false;
 
-        new Dropzone("div.dropzone", { url: 'http://dusty.dusty/upload.php' });
+        new Dropzone("div.dropzone", { 
+            url: 'http://dusty.dusty/upload.php',
+            success: function(file, result) {
+                var response = JSON.parse(result);
+                hash = response.hash;
+            },
+            sending: function(file, xhr, formData) {
+                if (hash) formData.append("hash", hash);
+            }
+        });
     </script>
   </body>
 </html>
