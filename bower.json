@@ -1,0 +1,17 @@
+{
+  "name": "sw-file-zipper-frontend",
+  "authors": [
+    "Alexandr Shleyko <dusty@yandex-team.ru>"
+  ],
+  "description": "File Zip Interface Softwarium",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
