@@ -24,12 +24,12 @@
   <body>
     <h1>Софтвариум архивация</h1>
     <h2>Имя архива</h2>
-    <input class="archive-name form-control">
+    <input class="archive-name-input form-control">
     
     <h2>Добавляйте файлы ниже:</h2>
     <div class="dropzone" action="/target"></div>
 
-    <button type="button" class="btn btn-success btn-lg">Получить архив</button>
+    <button type="button" class="btn btn-success btn-lg zip-download-btn">Получить архив</button>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="vendor/jquery/dist/jquery.min.js"></script>
@@ -37,11 +37,12 @@
     <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="vendor/dropzone/dist/min/dropzone.min.js"></script>
     <script>
+        var BACKEND_URL = 'http://dusty.dusty/';
         var hash;
         Dropzone.autoDiscover = false;
 
         new Dropzone("div.dropzone", { 
-            url: 'http://dusty.dusty/upload.php',
+            url: BACKEND_URL + 'upload.php',
             success: function(file, result) {
                 var response = JSON.parse(result);
                 hash = response.hash;
@@ -49,6 +50,26 @@
             sending: function(file, xhr, formData) {
                 if (hash) formData.append("hash", hash);
             }
+        });
+
+        $('.zip-download-btn').click(function() {
+          var archiveName = $('.archive-name-input').val() === '' ? hash : $('.archive-name-input').val();
+          $.ajax({
+            url: BACKEND_URL + 'archive.php',
+            method: 'GET',
+            data: {
+              hash: hash,
+              archive: archiveName
+            },
+            cache: false
+          }).done(function() {
+            var fileName = BACKEND_URL + hash + '/' + archiveName + '.zip';
+            $('body').append($('<iframe>', {
+              src: fileName
+            }));   
+          }).fail(function(response) {
+            alert(response.responseText);
+          });
         });
     </script>
   </body>
